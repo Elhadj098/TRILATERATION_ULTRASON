@@ -1,75 +1,74 @@
-# TRILATERATION_ULTRASON
-TRILATERATION A BASE DE 3 CAPTEURS ULTRASONS
-Projet Arduino - Trilatération avec capteurs à ultrasons
-Ce projet utilise un Arduino pour effectuer une trilatération à l'aide de trois capteurs à ultrasons afin de déterminer la position d'une cible dans un espace 2D. Les résultats de la position sont ensuite affichés sur un écran LCD et un servomoteur est utilisé pour orienter l'Arduino en fonction de la position calculée.
+==============================
+PROJET ARDUINO : Trilateration 2D avec Capteurs à Ultrasons
+==============================
 
-Fonctionnalités
-Trilatération avec 3 capteurs à ultrasons : Le système utilise trois capteurs à ultrasons pour mesurer les distances entre les capteurs et la cible.
+Ce projet permet de localiser une cible en 2D à l'aide de trois capteurs à ultrasons fixes, un algorithme de trilatération, un servomoteur qui s'oriente vers la cible, et un écran LCD RGB qui affiche ses coordonnées.
 
-Affichage LCD : Les coordonnées calculées sont affichées sur un écran LCD 16x2 pour une visualisation claire.
+------------------------------
+MATÉRIEL UTILISÉ
+------------------------------
+– 1 Arduino UNO ou MEGA  
+– 3 capteurs à ultrasons HC-SR04  
+– 1 servomoteur (ex: SG90)  
+– 1 écran LCD RGB compatible Grove (Adafruit / Seeed Studio)  
+– Câbles de connexion Dupont  
+– Breadboard (facultatif, pour faciliter le câblage)  
+– Résistances si nécessaire pour protéger les entrées  
 
-Contrôle du servomoteur : Un servomoteur ajuste l'orientation en fonction des coordonnées calculées pour suivre la cible.
+------------------------------
+CÂBLAGE DES CAPTEURS
+------------------------------
+Capteur 1 (US1) :  
+- TRIG : pin D9  
+- ECHO : pin D10  
 
-Calcul de position moyen : Le code calcule la position moyenne sur plusieurs itérations pour une meilleure précision.
+Capteur 2 (US2) :  
+- TRIG : pin D11  
+- ECHO : pin D12  
 
-Matériel requis
-Arduino (Uno, Mega ou autre compatible)
+Capteur 3 (US3) :  
+- TRIG : pin D3  
+- ECHO : pin D2  
 
-3 capteurs à ultrasons (HC-SR04 ou similaire)
+Servomoteur :  
+- Signal : pin D6  
+- VCC : 5V  
+- GND : GND  
 
-1 servomoteur
+Écran LCD RGB :  
+- Connecté via I2C (SDA/SCL)
 
-1 écran LCD 16x2 RGB
+------------------------------
+ÉTAPES POUR COMPILER ET TÉLÉVERSER
+------------------------------
+1. Ouvrir le fichier `.ino` dans l'IDE Arduino.  
+2. Aller dans **Outils > Type de carte** et sélectionner votre carte (UNO ou MEGA).  
+3. Sélectionner le bon port COM.  
+4. Vérifier que les bibliothèques nécessaires sont installées (voir ci-dessous).  
+5. Cliquer sur **Vérifier** puis **Téléverser**.  
 
-Câbles de connexion
+------------------------------
+PARAMÈTRES AJUSTABLES
+------------------------------
+– `iteration` : nombre de mesures pour la moyenne (par défaut 100)  
+– `distanceMax` : distance maximale à considérer pour la trilatération (par défaut 60 cm)  
+– `offset` : décalage angulaire pour le servomoteur (par défaut 219)  
+– `delayTime` : délai entre deux cycles de mesure (par défaut 500 ms)  
 
-Alimentation pour Arduino
+Ces paramètres peuvent être modifiés dans les premières lignes du code.
 
-Schéma de connexion
-Capteurs à ultrasons :
+------------------------------
+BIBLIOTHÈQUES NÉCESSAIRES
+------------------------------
+– `rgb_lcd.h` : pour l’écran LCD RGB  
+– `Servo.h` : pour le contrôle du servomoteur  
 
-Le premier capteur est connecté aux pins TRIGGER_PIN1 (9) et ECHO_PIN1 (10).
+Ces bibliothèques sont disponibles via le **Gestionnaire de bibliothèques** dans l’IDE Arduino :
+- Aller dans **Croquis > Inclure une bibliothèque > Gérer les bibliothèques**
+- Rechercher et installer **rgb_lcd** et **Servo**
 
-Le deuxième capteur est connecté aux pins TRIGGER_PIN2 (11) et ECHO_PIN2 (12).
+------------------------------
+REMARQUE
+------------------------------
+Le projet repose sur une disposition fixe des capteurs et suppose que la cible est réfléchissante aux ultrasons. Des erreurs de mesure peuvent apparaître si l’environnement est bruyant ou si la surface n’est pas adaptée à l’écho.
 
-Le troisième capteur est connecté aux pins TRIGGER_PIN3 (3) et ECHO_PIN3 (2).
-
-Servomoteur : Le servomoteur est connecté à la pin servoPin (6).
-
-LCD : L'écran LCD est connecté via le bus I2C, ce qui permet une communication simplifiée avec l'Arduino.
-
-Installation
-Télécharger et installer l'IDE Arduino : Télécharge l'IDE Arduino depuis le site officiel.
-
-Bibliothèques nécessaires :
-
-rgb_lcd : Pour l'affichage LCD RGB.
-
-Servo : Pour contrôler le servomoteur.
-
-Wire : Pour la communication I2C avec l'écran LCD.
-
-Tu peux installer ces bibliothèques via le gestionnaire de bibliothèques de l'IDE Arduino.
-
-Téléverser le code : Ouvre l'IDE Arduino, colle le code dans un nouveau fichier, sélectionne ta carte et ton port, puis téléverse le programme.
-
-Code Explication
-Mesure des distances : Le programme utilise trois capteurs à ultrasons pour mesurer la distance entre chaque capteur et la cible. La fonction MesureUS gère cette tâche.
-
-Trilatération : Les distances mesurées sont utilisées pour calculer les coordonnées (x, y) de la cible dans un espace 2D via la fonction DeterminerPosition.
-
-Affichage et contrôle du servomoteur : Une fois la position calculée, elle est affichée sur un écran LCD et un servomoteur est ajusté pour orienter l'Arduino vers la cible.
-
-Fonctionnement
-Le programme commence par mesurer la distance avec chaque capteur à ultrasons.
-
-Les distances mesurées sont utilisées pour résoudre un système d'équations permettant de déterminer les coordonnées de la cible.
-
-Les coordonnées calculées sont affichées sur l'écran LCD et utilisées pour ajuster la position du servomoteur.
-
-Le processus se répète à chaque itération, avec une mise à jour des coordonnées et de l'orientation.
-
-Remarques
-Précision : La précision de la trilatération dépend de la qualité des mesures des capteurs à ultrasons et de la configuration de l'espace.
-
-Améliorations possibles : Il est possible d'ajouter des fonctionnalités supplémentaires, comme la prise en charge de plus de capteurs, l'amélioration de la précision avec des algorithmes plus complexes, ou l'ajout d'un système de compensation pour les erreurs de mesure.
